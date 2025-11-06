@@ -24,6 +24,21 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: typst-community/setup-typst@v4
+      - name: Build PDF
+        run: |
+           jupyter book build --pdf
+
+      - name: Upload Output PDF as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+            name: Output PDF
+            path: exports/book.pdf
+            compression-level: 0
+
+  deploy-pages:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -51,5 +66,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+  
 
     
